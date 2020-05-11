@@ -1,0 +1,18 @@
+BACKEND_VOLUME := Y
+BACKEND_BRIGHTNESS := Y
+BACKEND_POWEROFF := Y
+BACKEND_REBOOT := Y
+BACKEND_KILL := Y
+BACKEND_SCREENSHOT := Y
+BACKEND_RATIOMODE := Y
+
+# Current OpenDingux/GCW0 doesn't support suspend
+# or TV-out
+# BACKEND_SUSPEND := Y
+# BACKEND_TVOUT := Y
+
+CROSS_COMPILE = mipsel-gcw0-linux-uclibc-
+
+CONFIG_PLATAFORM = _def
+
+CFLAGS += -D_def
