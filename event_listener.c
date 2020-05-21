@@ -1275,14 +1275,14 @@ int do_listen(const char *event, const char *jevent, const char *uinput)
 				case 0: {
 						if(my_jevent.value < AXIS_ZERO_0 - DEAD_ZONE) {
 							if (my_jevent.value < AXIS_ZERO_0 - DEAD_ZONE - SLOW_MOUSE_ZONE)
-								mouse_x = 0-5; 
-							else
-								mouse_x = 0-1; 
-						} else if (my_jevent.value > AXIS_ZERO_0 + DEAD_ZONE) {
-							if (my_jevent.value > AXIS_ZERO_0 + DEAD_ZONE + SLOW_MOUSE_ZONE)
 								mouse_x = 5; 
 							else
 								mouse_x = 1; 
+						} else if (my_jevent.value > AXIS_ZERO_0 + DEAD_ZONE) {
+							if (my_jevent.value > AXIS_ZERO_0 + DEAD_ZONE + SLOW_MOUSE_ZONE)
+								mouse_x = 0-5; 
+							else
+								mouse_x = 0-1; 
 						} else {
 							mouse_x = 0;
 						}
@@ -1291,14 +1291,14 @@ int do_listen(const char *event, const char *jevent, const char *uinput)
 				case 1: {
 						if(my_jevent.value < AXIS_ZERO_1 - DEAD_ZONE) {
 							if (my_jevent.value < AXIS_ZERO_1 - DEAD_ZONE - SLOW_MOUSE_ZONE)
-								mouse_y = 0-5; 
-							else
-								mouse_y = 0-1; 
-						} else if (my_jevent.value > AXIS_ZERO_1 + DEAD_ZONE) {
-							if (my_jevent.value > AXIS_ZERO_1 + DEAD_ZONE + SLOW_MOUSE_ZONE)
 								mouse_y = 5; 
 							else
 								mouse_y = 1; 
+						} else if (my_jevent.value > AXIS_ZERO_1 + DEAD_ZONE) {
+							if (my_jevent.value > AXIS_ZERO_1 + DEAD_ZONE + SLOW_MOUSE_ZONE)
+								mouse_y = 0-5; 
+							else
+								mouse_y = 0-1; 
 						} else {
 							mouse_y = 0;
 						}
