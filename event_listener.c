@@ -1408,6 +1408,52 @@ int do_listen(const char *event, const char *jevent, const char *uinput)
 			}
 		}
 #endif
+#ifdef _rg350			
+			if (is_noanalog) {
+
+			// We don't want to move the analog if the power button is pressed.
+			if (power_button_pressed)
+				continue;
+
+			// An event occured
+			if (eread) {
+				unsigned int i;
+
+				// Toggle the "value" flag of the button object
+				for (i = 0; i < nb_buttons; i++) {
+					if (buttons[i].id == my_event.code)
+						buttons[i].state = my_event.value;
+				}
+
+				switch(my_event.code) {
+                    case BUTTON_UP:
+					case BUTTON_DOWN:
+					case BUTTON_LEFT:
+					case BUTTON_RIGHT:
+					case BUTTON_X:
+					case BUTTON_Y:
+					case BUTTON_A:
+					case BUTTON_B:
+					case BUTTON_L1:
+					case BUTTON_R1:
+					case BUTTON_L2:
+					case BUTTON_R2:
+					case BUTTON_L3:
+					case BUTTON_R3:
+					case BUTTON_START:
+					case BUTTON_SELECT:
+						
+						// If the event is not analog, we reinject it.
+						inject(EV_KEY, my_event.code, my_event.value);
+						inject(EV_SYN, SYN_REPORT, 0);
+						continue;
+						
+					default:
+						continue;
+				}
+			}
+		}
+#endif
 		
 	}
 
