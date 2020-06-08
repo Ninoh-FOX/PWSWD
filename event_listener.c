@@ -645,6 +645,44 @@ bool power_button_is_pressed(void)
 	return power_button_pressed;
 }
 
+void check_battery_dead(void)
+{
+	FILE *levelHandle = NULL;
+	FILE *chargingHandle = NULL;
+	int batt_level=0;
+	int batt_charging=0;
+	
+	static unsigned long prev_time=0;
+	
+	unsigned long current_time=0;
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	current_time = tv.tv_sec * 1000000 + tv.tv_usec;
+	// Checking dead battery every 30 seconds
+	if((current_time-prev_time)>30000000)		// microseconds 30000000=30 seconds
+	{
+		levelHandle = fopen("/sys/class/power_supply/battery/capacity", "r");
+		if(levelHandle)
+		{
+			fscanf(levelHandle, "%d", &batt_level);
+			fclose(levelHandle);
+		}
+		chargingHandle = fopen("/sys/devices/platform/gpio-charger.1/power_supply/usb/online", "r");
+		if(chargingHandle)
+		{
+			fscanf(chargingHandle, "%d", &batt_charging);
+			fclose(chargingHandle);
+		}
+		
+		// If battery dead and not charging, poweroff
+		if(batt_level<=1 && batt_charging==0)
+		{
+			do_poweroff();
+		}
+	}
+}
+
 #ifdef _def
 int do_listen(const char *event, const char *uinput)
 {
@@ -687,6 +725,9 @@ int do_listen(const char *event, const char *uinput)
 	bool combo_used = false;
 
 	while(1) {
+		#ifdef _pg2v2
+		check_battery_dead();
+		#endif
 		// We wait for an event.
 		// On mouse mode, this call does not block.
 		struct input_event my_event;
@@ -937,6 +978,10 @@ int do_listen(const char *event, const char *jevent, const char *uinput)
 	short mouse_x,mouse_y;
 
 	while(1) {
+		#ifdef _pg2v2
+		check_battery_dead();
+		#endif
+			
 		int nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
 		struct input_event my_event, my_jevent;
 		int eread = 0, jread = 0, n;
