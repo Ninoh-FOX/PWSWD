@@ -677,7 +677,7 @@ void check_battery_dead(void)
 		}
 		
 		// If battery dead and not charging, poweroff
-		if(batt_level<=1 && batt_charging==0)
+		if(batt_level==0 && batt_charging==0)
 		{
 			do_poweroff();
 		}
