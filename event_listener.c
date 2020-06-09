@@ -662,6 +662,7 @@ void check_battery_dead(void)
 	// Checking dead battery every 30 seconds
 	if((current_time-prev_time)>30000000)		// microseconds 30000000=30 seconds
 	{
+		prev_time=current_time;
 		levelHandle = fopen("/sys/class/power_supply/battery/capacity", "r");
 		if(levelHandle)
 		{
