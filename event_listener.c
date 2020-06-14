@@ -726,9 +726,7 @@ int do_listen(const char *event, const char *uinput)
 	bool combo_used = false;
 
 	while(1) {
-		#ifdef _pg2v2
 		check_battery_dead();
-		#endif
 		// We wait for an event.
 		// On mouse mode, this call does not block.
 		struct input_event my_event;
@@ -979,9 +977,7 @@ int do_listen(const char *event, const char *jevent, const char *uinput)
 	short mouse_x,mouse_y;
 
 	while(1) {
-		#ifdef _pg2v2
 		check_battery_dead();
-		#endif
 			
 		int nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
 		struct input_event my_event, my_jevent;
