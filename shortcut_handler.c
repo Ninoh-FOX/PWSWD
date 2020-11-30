@@ -22,23 +22,24 @@ struct button buttons[] = {
 	_BUTTON(B),
 	_BUTTON(X),
 	_BUTTON(Y),
+	_BUTTON(SELECT),
+	_BUTTON(START),
+	_BUTTON(HOLD),
+	_BUTTON(VOLUP),
+	_BUTTON(VOLDOWN),
+	
 #ifdef _def
-	_BUTTON(L),
-	_BUTTON(R),
-#else
+#ifdef _rg280v
 	_BUTTON(L1),
 	_BUTTON(R1),
 	_BUTTON(L2),
 	_BUTTON(R2),
-#endif
-	_BUTTON(SELECT),
-	_BUTTON(START),
-	_BUTTON(HOLD),
-#ifdef _def
 #else
-	_BUTTON(VOLUP),
-	_BUTTON(VOLDOWN),
+	_BUTTON(L),
+	_BUTTON(R),
 #endif
+#endif
+
 #ifdef _rg350
 #ifdef _pg2v2
 #else
@@ -46,9 +47,22 @@ struct button buttons[] = {
 	_BUTTON(R3),
 #endif
 #endif
+	
+#ifdef _rg350
+	_BUTTON(L1),
+	_BUTTON(R1),
+	_BUTTON(L2),
+	_BUTTON(R2),
+#endif
+	
 #ifdef _pg2
+	_BUTTON(L1),
+	_BUTTON(R1),
+	_BUTTON(L2),
+	_BUTTON(R2),
 	_BUTTON(MENU),
 #endif
+	
 #ifdef _pg2v2
 	_BUTTON(MENU),
 #endif

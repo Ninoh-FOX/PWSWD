@@ -12,14 +12,19 @@
 #define CONFIG_PLATAFORM
 
 #ifdef _def
+#ifdef _rg280v
+#include "backend_rg280v/backends.h"
+#else
 #include "backend_def/backends.h"
+#endif
 #ifdef _rg350
-#include "backend_rg350/backends.h"
-#ifdef _pg2
-#include "backend_pg2/backends.h"
 #ifdef _pg2v2
 #include "backend_pg2v2/backends.h"
+#else
+#include "backend_rg350/backends.h"
 #endif
+#ifdef _pg2
+#include "backend_pg2/backends.h"
 #endif
 #endif
 #endif
@@ -33,6 +38,9 @@
 #endif
 
 #ifdef _def
+#ifdef _rg280v
+#else
+#endif
 #else
 #ifndef JEVENT_FILENAME
 #define JEVENT_FILENAME  "/dev/input/event3"

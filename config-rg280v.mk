@@ -15,7 +15,7 @@ CFLAGS += -DMIN_BRIGHTNESS=15
 
 CROSS_COMPILE = mipsel-gcw0-linux-uclibc-
 
-CFLAGS += -DWITH_REVERSED_X_Y -D_rg350
+CFLAGS += -DWITH_REVERSED_X_Y -D_rg280v -D_def
 
 DEFAULT_MIXER = "\"Master\""
 

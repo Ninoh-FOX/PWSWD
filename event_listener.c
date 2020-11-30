@@ -13,17 +13,23 @@
 #define CONFIG_PLATAFORM
 
 #ifdef _def
+#ifdef _rg280v
+#include "backend_rg280v/backends.h"
+#else
 #include "backend_def/backends.h"
+#endif
+#endif
+
 #ifdef _rg350
 #ifdef _pg2v2
 #include "backend_pg2v2/backends.h"
 #else
 #include "backend_rg350/backends.h"
 #endif
+#endif
+
 #ifdef _pg2
 #include "backend_pg2/backends.h"
-#endif
-#endif
 #endif
 
 #ifdef DEBUG
@@ -40,15 +46,37 @@
 
 
 #ifdef _def
+#ifdef _rg280v
+#define DEAD_ZONE		450
+#define SLOW_MOUSE_ZONE		600
+#define AXIS_ZERO_0		1620
+#define AXIS_ZERO_1		1620
 #else
 #define DEAD_ZONE		450
 #define SLOW_MOUSE_ZONE		600
 #define AXIS_ZERO_0		1620
 #define AXIS_ZERO_1		1620
 #endif
+#endif
+
+#ifdef _pg2
+#define DEAD_ZONE		450
+#define SLOW_MOUSE_ZONE		600
+#define AXIS_ZERO_0		1620
+#define AXIS_ZERO_1		1620
+#endif
+
 #ifdef _rg350
 #ifdef _pg2v2
+#define DEAD_ZONE		450
+#define SLOW_MOUSE_ZONE		600
+#define AXIS_ZERO_0		1620
+#define AXIS_ZERO_1		1620
 #else
+#define DEAD_ZONE		450
+#define SLOW_MOUSE_ZONE		600
+#define AXIS_ZERO_0		1620
+#define AXIS_ZERO_1		1620
 #define AXIS_ZERO_3		1620
 #define AXIS_ZERO_4		1620
 #endif
@@ -244,6 +272,21 @@ static void execute(enum event_type event, int value)
 			break;
 #endif
 #ifdef BACKEND_BRIGHTNESS
+#ifdef _rg280v
+		case brightup:
+			str = "brightup";
+			blank(0);
+			bright_up(value);
+			break;
+		case brightdown:
+			str = "brightdown";
+			if (get_brightness() <= 1) {
+				blank(1);
+			} else {
+				bright_down(value);
+			}
+			break;
+#else
 		case brightup:
 			str = "brightup";
 			bright_up(value);
@@ -253,6 +296,7 @@ static void execute(enum event_type event, int value)
 			bright_down(value);
 			break;
 #endif
+#endif
 		case mouse:
 			if (value != 1) return;
 			str = "mouse";
@@ -261,6 +305,18 @@ static void execute(enum event_type event, int value)
 			else
 				switchmode(MOUSE);
 			break;
+#ifdef _rg280v
+#ifdef BACKEND_SHARPNESS
+		case sharpup:
+			str = "sharpup";
+			sharp_up(value);
+			break;
+		case sharpdown:
+			str = "sharpdown";
+			sharp_down(value);
+			break;
+#endif
+#endif
 #ifdef BACKEND_TVOUT
 		case tvout:
 			if (value != 1) return;
@@ -464,11 +520,24 @@ static int open_fds(const char *event0fn, const char *uinputfn)
 
 	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_X) == -1) goto filter_fail;
 	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_Y) == -1) goto filter_fail;
+#ifdef _rg280v
+	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_B) == -1) goto filter_fail;
+	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_A) == -1) goto filter_fail;
+	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_L1) == -1) goto filter_fail;
+	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_R1) == -1) goto filter_fail;
+	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_L2) == -1) goto filter_fail;
+	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_R2) == -1) goto filter_fail;
+#else
 	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_L) == -1) goto filter_fail;
 	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_R) == -1) goto filter_fail;
+#endif
 	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_START) == -1) goto filter_fail;
 	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_SELECT) == -1) goto filter_fail;
 	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_POWER) == -1) goto filter_fail;
+#ifdef _rg280v
+	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_VOLUP) == -1) goto filter_fail;
+	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_VOLDOWN) == -1) goto filter_fail;
+#endif
 
 	if (ioctl(fd, UI_SET_EVBIT, EV_REL) == -1) goto filter_fail;
 	if (ioctl(fd, UI_SET_RELBIT, REL_X) == -1) goto filter_fail;
@@ -796,6 +865,20 @@ int do_listen(const char *event, const char *uinput)
 				}
 				continue;
 			}
+			#ifdef _rg280v
+			else if (!power_button_pressed)
+			{
+				
+				if (my_event.code == EVENT_SWITCH_VOLUP) {
+					execute(volup, my_event.value);
+					
+				}
+				if (my_event.code == EVENT_SWITCH_VOLDOWN) {
+					execute(voldown, my_event.value);
+				}
+				
+			}
+			#endif
 
 
 			// If the power button is currently pressed, we enable shortcuts.
@@ -825,6 +908,7 @@ int do_listen(const char *event, const char *uinput)
 					}
 				}
 				continue;
+				
 			}
 		}
 
@@ -846,7 +930,7 @@ int do_listen(const char *event, const char *uinput)
 				}
 
 				switch(my_event.code) {
-					case BUTTON_A:
+					case BUTTON_B:
 						if (my_event.value == 2) /* Disable repeat on mouse buttons */
 							continue;
 
@@ -854,18 +938,25 @@ int do_listen(const char *event, const char *uinput)
 						inject(EV_SYN, SYN_REPORT, 0);
 						continue;
 
-					case BUTTON_B:
+					case BUTTON_A:
 						if (my_event.value == 2) /* Disable repeat on mouse buttons */
 							continue;
 
 						inject(EV_KEY, BTN_RIGHT, my_event.value);
 						inject(EV_SYN, SYN_REPORT, 0);
 						continue;
-
-					case BUTTON_X:
-					case BUTTON_Y:
+                    
+					#ifdef _rg280v
+					case BUTTON_R1:
+					case BUTTON_L1:
+					case BUTTON_R2:
+					case BUTTON_L2:
+					#else
 					case BUTTON_L:
 					case BUTTON_R:
+					#endif
+					case BUTTON_X:
+					case BUTTON_Y:
 					case BUTTON_START:
 					case BUTTON_SELECT:
 
