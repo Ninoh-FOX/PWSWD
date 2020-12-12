@@ -930,7 +930,7 @@ int do_listen(const char *event, const char *uinput)
 				}
 
 				switch(my_event.code) {
-					case BUTTON_B:
+					case BUTTON_A:
 						if (my_event.value == 2) /* Disable repeat on mouse buttons */
 							continue;
 
@@ -938,7 +938,7 @@ int do_listen(const char *event, const char *uinput)
 						inject(EV_SYN, SYN_REPORT, 0);
 						continue;
 
-					case BUTTON_A:
+					case BUTTON_B:
 						if (my_event.value == 2) /* Disable repeat on mouse buttons */
 							continue;
 
