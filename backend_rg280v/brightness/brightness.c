@@ -11,9 +11,9 @@
 #define BLANKING_FILENAME "/sys/class/graphics/fb0/blank"
 
 #ifndef MIN_BRIGHTNESS
-#define MIN_BRIGHTNESS 15
+#define MIN_BRIGHTNESS 5
 #endif
-#define STEP_VALUE 15
+#define STEP_VALUE 5
 
 static int max_brightness = -1;
 static int current_value = -1;
