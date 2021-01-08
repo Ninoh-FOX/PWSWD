@@ -17,6 +17,6 @@ CROSS_COMPILE = mipsel-gcw0-linux-uclibc-
 
 CFLAGS += -DWITH_REVERSED_X_Y -D_rg280v -D_def
 
-DEFAULT_MIXER = "\"Master\""
+DEFAULT_MIXER = "\"PCM\""
 
 CONFIG_PLATAFORM = _rg280v
