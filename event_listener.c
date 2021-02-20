@@ -291,7 +291,7 @@ static void execute(enum event_type event, int value)
 			break;
 		case brightdown:
 			str = "brightdown";
-			if (get_brightness() <= 1) {
+			if (get_brightness() <= 5) {
 				blank(1);
 			} else {
 				bright_down(value);
@@ -413,7 +413,7 @@ static void execute(enum event_type event, int value)
 			break;
 		case brightdown:
 			str = "brightdown";
-			if (get_brightness() <= 1) {
+			if (get_brightness() <= 15) {
 				blank(1);
 			} else {
 				bright_down(value);
