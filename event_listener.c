@@ -24,7 +24,11 @@
 #ifdef _pg2v2
 #include "backend_pg2v2/backends.h"
 #else
+#ifdef _rg280m
+#include "backend_rg280m/backends.h"
+#else
 #include "backend_rg350/backends.h"
+#endif
 #endif
 #endif
 
@@ -73,12 +77,19 @@
 #define AXIS_ZERO_0		1620
 #define AXIS_ZERO_1		1620
 #else
+#ifdef _rg280m
+#define DEAD_ZONE		450
+#define SLOW_MOUSE_ZONE		600
+#define AXIS_ZERO_0		1620
+#define AXIS_ZERO_1		1620
+#else
 #define DEAD_ZONE		450
 #define SLOW_MOUSE_ZONE		600
 #define AXIS_ZERO_0		1620
 #define AXIS_ZERO_1		1620
 #define AXIS_ZERO_3		1620
 #define AXIS_ZERO_4		1620
+#endif
 #endif
 #endif
 
@@ -599,8 +610,12 @@ static int open_fds(const char *event0fn, const char *jeventfn, const char *uinp
 #ifdef _rg350
 #ifdef _pg2v2
 #else
+#ifdef _rg280m
+	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_L3) == -1) goto filter_fail;
+#else
 	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_L3) == -1) goto filter_fail;
 	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_R3) == -1) goto filter_fail;
+#endif
 #endif
 #endif
 	if (ioctl(fd, UI_SET_KEYBIT, BUTTON_START) == -1) goto filter_fail;
@@ -1279,8 +1294,12 @@ int do_listen(const char *event, const char *jevent, const char *uinput)
 #ifdef _rg350
 #ifdef _pg2v2
 #else
+#ifdef _rg280m
+					case BUTTON_L3:
+#else
 					case BUTTON_L3:
 					case BUTTON_R3:
+#endif
 #endif
 #endif
 					case BUTTON_START:
@@ -1304,6 +1323,8 @@ int do_listen(const char *event, const char *jevent, const char *uinput)
 
 #ifdef _rg350
 #ifdef _pg2v2
+#else
+#ifdef _rg280m
 #else
 			// 
 			if(is_mouse && jread && my_jevent.value != 0) {
@@ -1350,6 +1371,7 @@ int do_listen(const char *event, const char *jevent, const char *uinput)
 
 			}
 			
+#endif
 #endif
 #endif
 #ifdef _pg2
@@ -1399,6 +1421,52 @@ int do_listen(const char *event, const char *jevent, const char *uinput)
 			}
 #endif
 #ifdef _pg2v2
+				// 
+			if(is_mouse && jread && my_jevent.value != 0) {
+				// For each direction of the D-pad, we check the state of the corresponding button.
+				// If it is pressed, we inject an event with the corresponding mouse movement.
+
+			switch(my_jevent.code) {
+				case 0: {
+						if(my_jevent.value < AXIS_ZERO_0 - DEAD_ZONE) {
+							if (my_jevent.value < AXIS_ZERO_0 - DEAD_ZONE - SLOW_MOUSE_ZONE)
+								mouse_x = 5; 
+							else
+								mouse_x = 1; 
+						} else if (my_jevent.value > AXIS_ZERO_0 + DEAD_ZONE) {
+							if (my_jevent.value > AXIS_ZERO_0 + DEAD_ZONE + SLOW_MOUSE_ZONE)
+								mouse_x = 0-5; 
+							else
+								mouse_x = 0-1; 
+						} else {
+							mouse_x = 0;
+						}
+						break;
+					}
+				case 1: {
+						if(my_jevent.value < AXIS_ZERO_1 - DEAD_ZONE) {
+							if (my_jevent.value < AXIS_ZERO_1 - DEAD_ZONE - SLOW_MOUSE_ZONE)
+								mouse_y = 5; 
+							else
+								mouse_y = 1; 
+						} else if (my_jevent.value > AXIS_ZERO_1 + DEAD_ZONE) {
+							if (my_jevent.value > AXIS_ZERO_1 + DEAD_ZONE + SLOW_MOUSE_ZONE)
+								mouse_y = 0-5; 
+							else
+								mouse_y = 0-1; 
+						} else {
+							mouse_y = 0;
+						}
+						break;
+					default:
+						break;
+					}
+
+				}
+
+			}
+#endif
+#ifdef _rg280m
 				// 
 			if(is_mouse && jread && my_jevent.value != 0) {
 				// For each direction of the D-pad, we check the state of the corresponding button.

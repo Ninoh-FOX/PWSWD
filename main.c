@@ -21,7 +21,11 @@
 #ifdef _pg2v2
 #include "backend_pg2v2/backends.h"
 #else
+#ifdef _rg280m
+#include "backend_rg280m/backends.h"
+#else
 #include "backend_rg350/backends.h"
+#endif
 #endif
 #ifdef _pg2
 #include "backend_pg2/backends.h"
