@@ -11,7 +11,7 @@
 #define BLANKING_FILENAME "/sys/class/graphics/fb0/blank"
 
 #ifndef MIN_BRIGHTNESS
-#define MIN_BRIGHTNESS 5
+#define MIN_BRIGHTNESS 10
 #endif
 #define STEP_VALUE 5
 
