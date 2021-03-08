@@ -130,7 +130,7 @@ static void switchmode(enum _mode new)
 					break;
 				case HOLD:
 					grabbed = true;
-					blank(1);
+					blank(4);
 				default:
 					break;
 			}
@@ -190,7 +190,7 @@ static void switchmode(enum _mode new)
 					break;
 				case HOLD:
 					grabbed = true;
-					blank(1);
+					blank(4);
 					break;
 				default:
 					break;
@@ -211,7 +211,7 @@ static void switchmode(enum _mode new)
 					break;
 				case HOLD:
 					grabbed = true;
-					blank(1);
+					blank(4);
 					break;
 				default:
 					break;
@@ -294,7 +294,7 @@ static void execute(enum event_type event, int value)
 			if (get_brightness() != 5) {
 				bright_down(value);
 			} else {
-				blank(1);
+				blank(4);
 			}
 			break;
 #else
@@ -416,7 +416,7 @@ static void execute(enum event_type event, int value)
 			if (get_brightness() != 10) {
 				bright_down(value);
 			} else {
-				blank(1);
+				blank(4);
 			}
 			break;
 #endif
