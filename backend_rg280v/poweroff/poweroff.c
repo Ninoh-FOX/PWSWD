@@ -6,7 +6,7 @@
 static void *poweroff_thd(void *p)
 {
 #ifdef BACKEND_BRIGHTNESS
-	blank(1);
+	blank(4);
 #endif
 
 	/* Wait until the power slider is released, otherwise the
