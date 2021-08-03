@@ -17,6 +17,6 @@ CROSS_COMPILE = mipsel-gcw0-linux-uclibc-
 
 CFLAGS += -DWITH_REVERSED_X_Y -D_pg2v2 -D_rg350
 
-DEFAULT_MIXER = "\"PCM\""
+DEFAULT_MIXER = "\"Master\""
 
 CONFIG_PLATAFORM = _pg2v2
